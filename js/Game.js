@@ -1,36 +1,90 @@
+// Einzige Art es global zu machen?
+let newPhrase;
+
 class Game {
 
-  constructor (missed, phrases) {
-    // The class should include a constructor with the following properties:
-    // missed: used to track the number of missed guesses by the player.
-    // phrases: an array of phrases to use with the game (you'll use a method to create new instances of the Phrase class).
-    // A phrase should only include letters and spaces — no numbers, punctuation or other special characters.
+  constructor (phrases) {
+    this.missed = 0; // number of misses from the player
+    this.phrases = phrases; // an array of phrases for the game
   }
 
-  getRandomPhrase () {
-    // this method randomly retrieves one of the phrases stored in the phrases array.
+  // returns a random phrase from the phrases array
+  getRandomPhrase (phrases) {
+    return this.phrases[Math.floor(Math.random() * phrases.length)]
   }
 
-  handleInteraction () {
-    // this method checks to see if the button clicked by the player matches a letter in the phrase.
-    // If it does not, then call the removeLife() method..
-    // If the selected letter matches, call the showMatchedLetter() method on the phrase and then call the checkForWin() method.
+  // checks if a selected letter matches one in the phrase on the screen or not and calls a function, depending if it matches or not
+  handleInteraction (event) {
+    const screenPhrase = document.querySelectorAll("#phrase ul li");
+    let numberMatched = 0;
+    // checks how many/ if any letters on the screen correspond with the pressed letter
+    for (let i = 0; i < screenPhrase.length; i++) {
+      if (event.target.textContent.toUpperCase() === screenPhrase[i].textContent.toUpperCase()) {
+        numberMatched += 1;
+      }
+    }
+    // if no letters correspond with the clicked letter remove a life
+    if (numberMatched === 0) {
+      this.removeLife();
+      // else reveal the corresponding letters and check for win
+    } else {
+      newPhrase.showMatchedLetter(event);
+      this.checkForWin();
+    }
   }
 
+// called when the guess was incorrect
   removeLife () {
-    // this method removes a life, removes a heart from the board, and, if the player is out of lives, ends the game.
+    this.missed += 1;
+    let hearts = document.querySelector("#scoreboard ol");
+    // removes one from the hearts from the Dom
+    hearts.removeChild(hearts.lastElementChild);
+    console.log(this.missed);
+    // when you miss five times, the game is over
+    if (this.missed === 5) {
+      this.gameOver();
+    }
   }
 
   checkForWin () {
-    // this method checks to see if the player has selected all of the letters.
+    const screenPhrase = document.querySelectorAll("#phrase ul li");
+    let hidden = 0;
+    // checks how many/ if any letters on the screen still have the class hide
+    screenPhrase.forEach(function (element) {
+      if (!element.classList.contains("hide")) {
+        return true
+        console.log("true");
+      } else {
+        return false
+        console.log("false");
+       }
+    });
+    // if none have the class hide, the player has won
+    if (hidden === 0) {
+      return true;
+      console.log("win");
+    }
   }
 
   gameOver () {
-    // this method displays a message if the player wins or a different message if they lose.
+    $startButton.parent().show();
+    $("#btn__reset").text("Restart Game");
+    if(this.checkForWin()) {
+      $("#game-over-message").text("You have won!");
+      $("#overlay").addClass("win");
+      $("#overlay").rempveClass("lose");
+    } else {
+      $("#game-over-message").text("You have lost");
+      $("#overlay").addClass("lose");
+      $("#overlay").rempveClass("win");
+    }
   }
 
+  // creates a new game
   startGame () {
-    // calls the getRandomPhrase() method, and adds that phrase to the board by calling the Phrase class' addPhraseToDisplay() method.
+    const phrase = this.getRandomPhrase(phrases);
+    newPhrase = new Phrase(phrase);
+    newPhrase.addPhraseToDisplay(phrase);
   }
 
 }

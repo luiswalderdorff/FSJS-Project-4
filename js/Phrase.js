@@ -1,27 +1,48 @@
+// Variables (how to create variables in class?)
+
+let phraseArray;
+let correctLetter; //a clicked letter that has a corresponding letter on the display
+let phraseHTML= "";
+
 class Phrase {
 
   constructor(phrase) {
     this.phrase = phrase;
   }
 
-  addPhraseToDisplay(phrase) {
-    const phraseArray = phrase.split("");
-    let phraseHTML= "";
+  // Function to add the letters of the phrase to the webpage
+  addPhraseToDisplay() {
+    phraseArray = this.phrase.split("");
+    // add all letters from the array to the page which arent spaces
     for (let i = 0; i < phraseArray.length; i++) {
-      phraseHTML += `<li class='hide letter ${phraseArray[i]}'>${phraseArray[i]}</li>`
+      if (phraseArray[i] !== " ") {
+        //add phraseArray[i] also as class, to be able to select them more easily
+        phraseHTML += `<li class='hide letter ${phraseArray[i]}'>${phraseArray[i]}</li>`
+      }
     }
-    return $("#phrase ul").innerHTML = phraseHTML;
+    return $("#phrase ul").append(phraseHTML);
   }
 
-  checkLetter() {
-    // If the selected letter equals one of the letters from the phrase, return true
+
+  checkLetter(event) {
+    for (let i = 0; i < phraseArray.length; i++) {
+      // If the letter you picked fits one from the array return true and save it to the correctLetter Variable
+      if (event.target.textContent.toUpperCase() === phraseArray[i].toUpperCase()) {
+        correctLetter = phraseArray[i];
+        return true;
+      }
+    }
   }
 
-  showMatchedLetter() {
-    // If checkLetter return true on a letter, remove the hidden class
+  showMatchedLetter(event) {
+    const screenPhrase = document.querySelectorAll("#phrase ul li");
+    if (this.checkLetter(event)) {
+      for ( let i = 0; i < phraseArray.length; i++) {
+        if ( event.target.textContent.toUpperCase() === screenPhrase[i].textContent.toUpperCase()) {
+          screenPhrase[i].classList .remove("hide");
+          screenPhrase[i].style.color = "black";
+        }
+      }
+    }
   }
 }
-
-
-// addPhraseToDisplay(): When the player correctly guesses a letter, the empty box is replaced with a the matched letter
-// (see the showMatchedLetter() method below. Make sure the phrase displayed on the screen doesn't include spaces.

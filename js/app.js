@@ -1,27 +1,41 @@
 
 const $startButton = $("#btn__reset");
 const $buttons = $("#qwerty");
+const phrases = ["Hello",
+                 "Gracias",
+                 "Word",
+                 "Calamity"];
+
+
+// Create the newGame here, so when Game is created with the $startButton eventhandler, newGame is global
+let newGame;
 
 // Hides the starting overlay
 function resetDisplay () {
   $startButton.parent().hide();
 }
 
-function markButton () {
+function markButton (event) {
   // this function is called when a player selects a letter. It disables the button on the onscreen keyboard and calls the handleInteraction()
+  event.target.disabled = true;
+  newGame.handleInteraction(event);
 }
 
 // Calls the resetDisplay function, when start is clicked
 $startButton.click(function () {
   // Add an event listener to the "Start Game" button which calls the resetDisplay() function, creates a new Game object, and starts the game.
-  resetDisplay()
+  resetDisplay();
+  newGame = new Game(phrases)
+
+  newGame.startGame();
 });
 
 // Calls the markButton function only on buttons
 $buttons.click(function (event) {
-  // Why does event.target work, but this doesn't?
+  // Why does event.target work, but this. doesn't?
   if($(event.target).is(":button")) {
-    markButton();
+    markButton(event);
+    console.log(event.target);
   }
 })
 
