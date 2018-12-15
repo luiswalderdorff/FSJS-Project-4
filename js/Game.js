@@ -29,7 +29,9 @@ class Game {
       // else reveal the corresponding letters and check for win
     } else {
       newPhrase.showMatchedLetter(event);
-      this.checkForWin();
+      if (this.checkForWin()) {
+        this.gameOver();
+      }
     }
   }
 
@@ -39,7 +41,6 @@ class Game {
     let hearts = document.querySelector("#scoreboard ol");
     // removes one from the hearts from the Dom
     hearts.removeChild(hearts.lastElementChild);
-    console.log(this.missed);
     // when you miss five times, the game is over
     if (this.missed === 5) {
       this.gameOver();
@@ -51,18 +52,12 @@ class Game {
     let hidden = 0;
     // checks how many/ if any letters on the screen still have the class hide
     screenPhrase.forEach(function (element) {
-      if (!element.classList.contains("hide")) {
-        return true
-        console.log("true");
-      } else {
-        return false
-        console.log("false");
-       }
+      if (element.classList.contains("hide")) {
+        hidden += 1;
+      }
     });
-    // if none have the class hide, the player has won
     if (hidden === 0) {
       return true;
-      console.log("win");
     }
   }
 
@@ -72,11 +67,11 @@ class Game {
     if(this.checkForWin()) {
       $("#game-over-message").text("You have won!");
       $("#overlay").addClass("win");
-      $("#overlay").rempveClass("lose");
+      $("#overlay").removeClass("lose");
     } else {
       $("#game-over-message").text("You have lost");
       $("#overlay").addClass("lose");
-      $("#overlay").rempveClass("win");
+      $("#overlay").removeClass("win");
     }
   }
 

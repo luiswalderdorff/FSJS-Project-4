@@ -23,11 +23,15 @@ function markButton (event) {
 
 // Calls the resetDisplay function, when start is clicked
 $startButton.click(function () {
-  // Add an event listener to the "Start Game" button which calls the resetDisplay() function, creates a new Game object, and starts the game.
-  resetDisplay();
-  newGame = new Game(phrases)
+  if ($startButton.text() === "Start Game") {
+    resetDisplay();
+    newGame = new Game(phrases)
 
-  newGame.startGame();
+    newGame.startGame();
+  } else {
+    // If button text changes, reload page
+    location.reload();
+  }
 });
 
 // Calls the markButton function only on buttons
@@ -35,7 +39,6 @@ $buttons.click(function (event) {
   // Why does event.target work, but this. doesn't?
   if($(event.target).is(":button")) {
     markButton(event);
-    console.log(event.target);
   }
 })
 
