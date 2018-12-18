@@ -1,4 +1,4 @@
-// Variables (how to create variables in class?)
+// Variables
 
 let phraseArray;
 let correctLetter; //a clicked letter that has a corresponding letter on the display
@@ -39,8 +39,8 @@ class Phrase {
     if (this.checkLetter(event)) {
       for ( let i = 0; i < phraseArray.length; i++) {
         if ( event.target.textContent.toUpperCase() === screenPhrase[i].textContent.toUpperCase()) {
-          screenPhrase[i].classList .remove("hide");
-          screenPhrase[i].style.color = "black";
+          screenPhrase[i].classList.remove("hide");
+          screenPhrase[i].classList.add("show");
         }
       }
     }
